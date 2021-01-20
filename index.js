@@ -1,76 +1,57 @@
-function makeid() {
-  var text = "";
-  var possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (var i = 0; i < 5; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return text;
-}
-
-class Enco {
+class Ency {
   constructor() {
-    this.members = {
-      s: {
-        se: {
-          sel: {
-            sela: "okundu",
-            sele: "Kutu",
-          },
-          ser: {
-            sert: "Demir",
-            serd: {
-              serda: {
-                serdar: "ortaç",
-              },
-            },
-          },
-        },
-      },
-    };
+    this.members = {};
   }
 
   add(key, value) {
     let current = this.members;
     //Bütün harfler için yap:
-    for (let sira = 1; sira < key.length; sira++) {
+    for (let sira = 1; sira < key.length + 1; sira++) {
       //Sonraki: 0 ile n inci karakter arası
       let next = key.substring(0, sira);
       //eğer şuanki objede bu varsa,
       if (current.hasOwnProperty(next)) {
-        //devam et...
-        if (sira === key.length - 1) {
-          if (isObject(current[next])) {
-            // current = current[1];
-            console.log("bak", current[next]);
-          } else {
-            current = current[next];
-          }
-        } else {
-          current = current[next];
-        }
-
+        current = current[next];
         //yoksa oluştur ve currenti oluşturduğun yap.
       } else {
-        current[next] = {};
+        if (!isObject(current)) {
+          let newobj = { default: current };
+          current[next] = new Object();
+        } else {
+          current[next] = {};
+        }
         current = current[next];
       }
     }
-    current[key] = value;
-    console.log(current);
+    if (isObject(current)) {
+      current["default"] = value;
+    }
   }
-  find(key) {
+  get(key) {
     let current = this.members;
     for (let sira = 1; sira <= key.length; sira++) {
       let next = key.substring(0, sira);
-      current = current[next];
+      try {
+        current = current[next];
+      } catch (error) {
+        return null;
+      }
     }
-    return current;
+    if (current.hasOwnProperty("default")) {
+      return current["default"];
+    } else {
+      if (!isObject(current)) {
+        return current;
+      } else {
+        return null;
+      }
+    }
   }
 }
-let ben = new Enco(5, 10, 10);
-ben.add("seyahat", "mehmet");
-console.log(ben);
 
-ben.add("seya", "mehmet");
+//USAGE
+// myEnc= new Ency();
+// To Add to Encylopedia:
+//myEnc.add(key,value)
+// To Get from Encylopedia:
+//myEnc.get(key)
