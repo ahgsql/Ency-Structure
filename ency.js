@@ -14,12 +14,7 @@ class Ency {
         current = current[next];
         //yoksa oluştur ve currenti oluşturduğun yap.
       } else {
-        if (!isObject(current)) {
-          let newobj = { default: current };
-          current[next] = new Object();
-        } else {
-          current[next] = {};
-        }
+        current[next] = !isObject(current) ? { default: current } : {};
         current = current[next];
       }
     }
