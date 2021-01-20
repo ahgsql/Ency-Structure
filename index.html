@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS Tests</title>
+    <style>
+      body {
+        background: #333;
+        font-size: 2rem;
+      }
+      .log-boolean {
+        color: rgb(80, 157, 245);
+      }
+      .log-undefined {
+        color: magenta;
+      }
+      .log-object {
+        color: rgb(255, 0, 157);
+      }
+      .log-string {
+        color: orange;
+      }
+      .log-number {
+        color: cyan;
+      }
+    </style>
+  </head>
+  <body>
+    <pre id="log"></pre>
+    <script>
+      function isObject(o) {
+        return o instanceof Object && o.constructor === Object;
+      }
+      (function (logger) {
+        console.old = console.log;
+        console.log = function () {
+          var output = "",
+            arg,
+            i;
+
+          for (i = 0; i < arguments.length; i++) {
+            arg = arguments[i];
+            output += '<span class="log-' + typeof arg + '">';
+
+            if (
+              typeof arg === "object" &&
+              typeof JSON === "object" &&
+              typeof JSON.stringify === "function"
+            ) {
+              output += JSON.stringify(arg);
+            } else {
+              output += arg;
+            }
+
+            output += "</span>&nbsp;";
+          }
+
+          logger.innerHTML += output + "<br>";
+          console.old.apply(undefined, arguments);
+        };
+      })(document.getElementById("log"));
+    </script>
+    <script src="index.js"></script>
+  </body>
+</html>
