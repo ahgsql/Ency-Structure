@@ -40,11 +40,7 @@ class Ency {
     if (current.hasOwnProperty("default")) {
       return current["default"];
     } else {
-      if (!isObject(current)) {
-        return current;
-      } else {
-        return null;
-      }
+      return !isObject(current) ? current : null;
     }
   }
 }
